@@ -7,18 +7,18 @@ using HttpClients.ClientInterfaces;
 
 namespace HttpClients.Implementations;
 
-public class TodoHttpClient : ITodoService
+public class PostHttpClient : IPostService
 {
     private readonly HttpClient client;
 
-    public TodoHttpClient(HttpClient client)
+    public PostHttpClient(HttpClient client)
     {
         this.client = client;
     }
 
-    public async Task CreateAsync(TodoCreationDto dto)
+    public async Task CreateAsync(PostCreationDto dto)
     {
-        HttpResponseMessage response = await client.PostAsJsonAsync("/todos", dto);
+        HttpResponseMessage response = await client.PostAsJsonAsync("/posts", dto);
         if (!response.IsSuccessStatusCode)
         {
             string content = await response.Content.ReadAsStringAsync();
@@ -26,30 +26,30 @@ public class TodoHttpClient : ITodoService
         }
     }
 
-    public async Task<ICollection<Todo>> GetAsync(string? userName, int? userId, bool? completedStatus, string? titleContains)
+    public async Task<ICollection<Post>> GetAsync(string? userName, int? userId, string? titleContains, string? description)
     {
-        string query = ConstructQuery(userName, userId, completedStatus, titleContains);
+        string query = ConstructQuery(userName, userId, titleContains, description);
 
-        HttpResponseMessage response = await client.GetAsync("/todos" + query);
+        HttpResponseMessage response = await client.GetAsync("/posts" + query);
         string content = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(content);
         }
 
-        ICollection<Todo> todos = JsonSerializer.Deserialize<ICollection<Todo>>(content, new JsonSerializerOptions
+        ICollection<Post> posts = JsonSerializer.Deserialize<ICollection<Post>>(content, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         })!;
-        return todos;
+        return posts;
     }
 
-    public async Task UpdateAsync(TodoUpdateDto dto)
+    public async Task UpdateAsync(PostUpdateDto dto)
     {
         string dtoAsJson = JsonSerializer.Serialize(dto);
         StringContent body = new StringContent(dtoAsJson, Encoding.UTF8, "application/json");
 
-        HttpResponseMessage response = await client.PatchAsync("/todos", body);
+        HttpResponseMessage response = await client.PatchAsync("/posts", body);
         if (!response.IsSuccessStatusCode)
         {
             string content = await response.Content.ReadAsStringAsync();
@@ -57,16 +57,16 @@ public class TodoHttpClient : ITodoService
         }
     }
 
-    public async Task<TodoBasicDto> GetByIdAsync(int id)
+    public async Task<PostBasicDto> GetByIdAsync(int id)
     {
-        HttpResponseMessage response = await client.GetAsync($"/todos/{id}");
+        HttpResponseMessage response = await client.GetAsync($"/posts/{id}");
         string content = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(content);
         }
 
-        TodoBasicDto todo = JsonSerializer.Deserialize<TodoBasicDto>(content, new JsonSerializerOptions
+        PostBasicDto todo = JsonSerializer.Deserialize<PostBasicDto>(content, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         })!;
@@ -75,7 +75,7 @@ public class TodoHttpClient : ITodoService
 
     public async Task DeleteAsync(int id)
     {
-        HttpResponseMessage response = await client.DeleteAsync($"Todos/{id}");
+        HttpResponseMessage response = await client.DeleteAsync($"Posts/{id}");
         if (!response.IsSuccessStatusCode)
         {
             string content = await response.Content.ReadAsStringAsync();
@@ -83,7 +83,7 @@ public class TodoHttpClient : ITodoService
         }
     }
 
-    private static string ConstructQuery(string? userName, int? userId, bool? completedStatus, string? titleContains)
+    private static string ConstructQuery(string? userName, int? userId, string? titleContains, string? description)
     {
         string query = "";
         if (!string.IsNullOrEmpty(userName))
@@ -97,16 +97,16 @@ public class TodoHttpClient : ITodoService
             query += $"userid={userId}";
         }
 
-        if (completedStatus != null)
-        {
-            query += string.IsNullOrEmpty(query) ? "?" : "&";
-            query += $"completedstatus={completedStatus}";
-        }
-
         if (!string.IsNullOrEmpty(titleContains))
         {
             query += string.IsNullOrEmpty(query) ? "?" : "&";
             query += $"titlecontains={titleContains}";
+        }
+
+        if (!string.IsNullOrEmpty(description))
+        {
+            query += string.IsNullOrEmpty(query) ? "?" : "&";
+            query += $"description={description}";
         }
 
         return query;

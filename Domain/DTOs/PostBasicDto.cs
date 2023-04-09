@@ -1,17 +1,17 @@
 ﻿namespace Domain.DTOs;
 
-public class TodoBasicDto
+public class PostBasicDto
 {
     public int Id { get; }
     public string OwnerName { get; }
     public string Title { get; }
-    public bool IsCompleted { get;  }
+    public string Description { get;  }
 
-    public TodoBasicDto(int id, string ownerName, string title, bool isCompleted)
+    public PostBasicDto(int id, string ownerName, string title, string description)
     {
         Id = id;
         OwnerName = ownerName;
         Title = title;
-        IsCompleted = isCompleted;
+        Description = description;
     }
 }

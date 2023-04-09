@@ -1,9 +1,9 @@
-﻿@page "/ViewTodos"
+﻿@page "/ViewPosts"
 @using Domain.Models
 @using HttpClients.ClientInterfaces
 @using UIComponents
 @using Domain.DTOs
-@inject ITodoService todoService
+@inject IPostService postService
 @inject NavigationManager navMgr
 
 <h3>Todos</h3>
@@ -21,63 +21,54 @@
                 <input type="number" @bind="userIdFilter"/>
             </div>
             <div class="filter">
-                <label>Is completed?</label>
-                <select @bind="completedStatusFilter">
-                    <option value="all">All</option>
-                    <option value="true">Yes</option>
-                    <option value="false">No</option>
-                </select>
-            </div>
-            <div class="filter">
                 <label>Title contains:</label>
                 <input type="text" @bind="titleContainsFilter"/>
+            </div>
+            <div class="filter">
+                <label>Description contains:</label>
+                <input type="text" @bind="descriptionFilter"/>
             </div>
         }
     </div>
 </div>
 
 <div>
-    <button @onclick="LoadTodos">Load</button>
+    <button @onclick="LoadPosts">Load</button>
 </div>
 
-@if (todos == null)
+@if (posts == null)
 {
 }
-else if (!todos.Any())
+else if (!posts.Any())
 {
-    <p>No Todos to display</p>
+    <p>No Posts to display</p>
 }
 else
 {
     <table class="table">
         <thead>
         <tr>
-            <th>Todo ID</th>
+            <th>Posts ID</th>
             <th>Owner ID</th>
             <th>Title</th>
-            <th>Completed?</th>
+            <th>Description</th>
             <th>Edit</th>
             <th>Delete?</th>
         </tr>
         </thead>
         <tbody>
-        @foreach (var item in todos)
+        @foreach (var item in posts)
         {
             <tr>
                 <td>@item.Id</td>
                 <td>@item.Owner.UserName</td>
                 <td>@item.Title</td>
+                <td>@item.Description</td>
                 <td>
-                    <FancyCheckBox 
-                        IsCompleted="@item.IsCompleted" 
-                        OnChange="@((status) => CompleteTodo(item, status))"
-                        />
+                    <img src="icons/edit.gif" class="funnel" @onclick="@(() => navMgr.NavigateTo($"/EditPost/{item.Id}"))"/>
                 </td>
                 <td>
-                    <img src="icons/edit.gif" class="funnel" @onclick="@(() => navMgr.NavigateTo($"/EditTodo/{item.Id}"))"/>
-                </td>
-                <td>
-                    <label @onclick="@(() => RemoveTodo(item.Id))" style="cursor:pointer; color: red; font-weight: bold">
+                    <label @onclick="@(() => RemovePost(item.Id))" style="cursor:pointer; color: red; font-weight: bold">
                         &#x2717;
                     </label>
                 </td>
@@ -92,25 +83,20 @@ else
 }
 
 @code {
-    private IEnumerable<Todo>? todos;
+    private IEnumerable<Post>? posts;
     private string msg = "";
     private bool doShowFilters = false;
 
     private string? usernameFilter;
     private int? userIdFilter;
-    private string? completedStatusFilter;
+    private string? descriptionFilter;
     private string? titleContainsFilter;
 
-    private async Task LoadTodos()
+    private async Task LoadPosts()
     {
         try
         {
-            bool? completedFilterValue = null;
-            if (!string.IsNullOrEmpty(completedStatusFilter) && !completedStatusFilter.Equals("all"))
-            {
-                completedFilterValue = bool.Parse(completedStatusFilter);
-            }
-            todos = await todoService.GetAsync(usernameFilter, userIdFilter, completedFilterValue, titleContainsFilter);
+            posts = await postService.GetAsync(usernameFilter, userIdFilter, titleContainsFilter, descriptionFilter);
         }
         catch (Exception e)
         {
@@ -119,33 +105,17 @@ else
         }
     }
 
-    private async Task CompleteTodo(Todo item, bool status)
-    {
-        TodoUpdateDto dto = new(item.Id)
-        {
-            IsCompleted = status
-        };
-        try
-        {
-            await todoService.UpdateAsync(dto);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            msg = e.Message;
-        }
-    }
-
-    private async Task RemoveTodo(int todoId)
+    
+    private async Task RemovePost(int postId)
     {
         msg = "";
         try
         {
-            await todoService.DeleteAsync(todoId);
+            await postService.DeleteAsync(postId);
             
-            var list = new List<Todo>(todos!);
-            list.RemoveAll(todo => todo.Id == todoId);
-            todos = list.AsEnumerable();
+            var list = new List<Post>(posts!);
+            list.RemoveAll(post => post.Id == postId);
+            posts = list.AsEnumerable();
         }
         catch (Exception e)
         {
