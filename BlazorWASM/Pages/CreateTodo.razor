@@ -1,10 +1,10 @@
-﻿@page "/CreateTodo"
+﻿@page "/CreatePost"
 @using HttpClients.ClientInterfaces
 @using Domain.Models
 @using Domain.DTOs
 @using UIComponents
 @inject IUserService userService
-@inject ITodoService todoService
+@inject IPostService postService
 @inject NavigationManager navMgr
 
 <div class="card">
@@ -14,14 +14,18 @@
     }
     else if (!users.Any())
     {
-        <label>No users, you cannot create a Todo</label>
+        <label>No users, you cannot create a Post</label>
     }
     else
     {
-        <h3>Create Todo</h3>
+        <h3>Create Post</h3>
         <div class="form-group field">
             <label>Title:</label>
-            <input type="text" @bind="todoTitle"/>
+            <input type="text" @bind="postTitle"/>
+        </div>
+        <div class="form-group field">
+            <label>Description:</label>
+            <input type="text" @bind="postDescription"/>
         </div>
         <div class="form-group field">
             <label>Assignee:</label>
@@ -44,14 +48,15 @@
 </div>
 
 <Modal ShowModal="showModal">
-    <p>You have successfully added a new Todo item. You should be very proud of yourself!</p>
+    <p>You have successfully added a new Post item. You should be very proud of yourself!</p>
     <button @onclick="@Proceed">Wonderful</button>
 </Modal>
 
 @code {
     private IEnumerable<User>? users;
     private int? selectedUserId;
-    private string todoTitle = "";
+    private string postTitle = "";
+    private string postDescription = "";
 
     private string msg = "";
 
@@ -79,16 +84,23 @@
             msg = "You must select an assignee!";
             return;
         }
-        if (string.IsNullOrEmpty(todoTitle))
+        
+        if (string.IsNullOrEmpty(postTitle))
         {
             msg = "Title cannot be empty!";
+            return;
+        }
+        
+        if (string.IsNullOrEmpty(postDescription))
+        {
+            msg = "Description cannot be empty!";
             return;
         }
 
         try
         {
-            TodoCreationDto dto = new((int)selectedUserId, todoTitle);
-            await todoService.CreateAsync(dto);
+            PostCreationDto dto = new((int)selectedUserId, postTitle, postDescription);
+            await postService.CreateAsync(dto);
             showModal = true;
         }
         catch (Exception e)
@@ -101,7 +113,7 @@
     private void Proceed()
     {
         showModal = false;
-        navMgr.NavigateTo("/ViewTodos");
+        navMgr.NavigateTo("/ViewPosts");
     }
 
 }
