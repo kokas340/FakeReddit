@@ -7,14 +7,14 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class TodosController : ControllerBase
+public class PostsController : ControllerBase
 {
 
     private readonly IPostLogic postLogic;
 
-    public TodosController(IPostLogic todoLogic)
+    public PostsController(IPostLogic postLogic)
     {
-        this.postLogic = todoLogic;
+        this.postLogic = postLogic;
     }
 
     [HttpPost]
@@ -39,8 +39,8 @@ public class TodosController : ControllerBase
         try
         {
             SearchPostParametersDto parameters = new(userName, userId, titleContains, description);
-            var todos = await postLogic.GetAsync(parameters);
-            return Ok(todos);
+            var posts = await postLogic.GetAsync(parameters);
+            return Ok(posts);
         }
         catch (Exception e)
         {

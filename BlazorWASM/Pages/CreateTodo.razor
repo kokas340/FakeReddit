@@ -2,10 +2,12 @@
 @using HttpClients.ClientInterfaces
 @using Domain.Models
 @using Domain.DTOs
+@using Microsoft.AspNetCore.Authorization
 @using UIComponents
 @inject IUserService userService
 @inject IPostService postService
 @inject NavigationManager navMgr
+@attribute [Authorize]
 
 <div class="card">
     @if (users == null)

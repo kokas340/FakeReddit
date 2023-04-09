@@ -1,6 +1,7 @@
 ﻿using Application.DaoInterfaces;
 using Domain.DTOs;
 using Domain.Models;
+using Shared.Dtos;
 
 namespace FileData.DAOs;
 
@@ -38,15 +39,15 @@ public class UserFileDao : IUserDao
         return Task.FromResult(existing);
     }
 
-    public Task<IEnumerable<User>> GetAsync(SearchUserParametersDto searchParameters)
+    public Task<User?> GetAsync(UserLoginDto loginUser)
     {
-        IEnumerable<User> users = context.Users.AsEnumerable();
-        if (searchParameters.UsernameContains != null)
+        User user = null;
+        if (loginUser.UserName != null && loginUser.Password != null)
         {
-            users = context.Users.Where(u => u.UserName.Contains(searchParameters.UsernameContains, StringComparison.OrdinalIgnoreCase));
+             user  = context.Users.FirstOrDefault(u => 
+                u.UserName.Contains(loginUser.UserName, StringComparison.OrdinalIgnoreCase) && u.Password.Contains(loginUser.Password, StringComparison.Ordinal));
         }
-
-        return Task.FromResult(users);
+        return Task.FromResult(user);
     }
 
     public Task<User?> GetByIdAsync(int id)

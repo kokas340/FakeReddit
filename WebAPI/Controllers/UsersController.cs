@@ -2,6 +2,7 @@
 using Domain.DTOs;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Dtos;
 
 namespace WebAPI.Controllers;
 
@@ -17,7 +18,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<User>> CreateAsync(UserCreationDto dto)
+    public async Task<ActionResult<User>> CreateAsync(UserLoginDto dto)
     {
         try
         {
@@ -32,12 +33,11 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetAsync([FromQuery] string? username)
+    public async Task<ActionResult<IEnumerable<User>>> GetAsync(UserLoginDto userLoginDto)
     {
         try
         {
-            SearchUserParametersDto parameters = new(username);
-            IEnumerable<User> users = await userLogic.GetAsync(parameters);
+            User users = await userLogic.GetAsync(userLoginDto);
             return Ok(users);
         }
         catch (Exception e)

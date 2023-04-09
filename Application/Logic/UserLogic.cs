@@ -2,6 +2,7 @@
 using Application.LogicInterfaces;
 using Domain.DTOs;
 using Domain.Models;
+using Shared.Dtos;
 
 namespace Application.Logic;
 
@@ -14,7 +15,7 @@ public class UserLogic : IUserLogic
         this.userDao = userDao;
     }
 
-    public async Task<User> CreateAsync(UserCreationDto dto)
+    public async Task<User> CreateAsync(UserLoginDto dto)
     {
         User? existing = await userDao.GetByUsernameAsync(dto.UserName);
         if (existing != null)
@@ -23,7 +24,8 @@ public class UserLogic : IUserLogic
         ValidateData(dto);
         User toCreate = new User
         {
-            UserName = dto.UserName
+            UserName = dto.UserName,
+            Password = dto.Password
         };
         
         User created = await userDao.CreateAsync(toCreate);
@@ -31,12 +33,12 @@ public class UserLogic : IUserLogic
         return created;
     }
 
-    public Task<IEnumerable<User>> GetAsync(SearchUserParametersDto searchParameters)
+    public Task<User?> GetAsync(UserLoginDto user)
     {
-        return userDao.GetAsync(searchParameters);
+        return userDao.GetAsync(user);
     }
 
-    private static void ValidateData(UserCreationDto userToCreate)
+    private static void ValidateData(UserLoginDto userToCreate)
     {
         string userName = userToCreate.UserName;
 
@@ -45,5 +47,6 @@ public class UserLogic : IUserLogic
 
         if (userName.Length > 15)
             throw new Exception("Username must be less than 16 characters!");
+        
     }
 }
