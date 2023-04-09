@@ -3,13 +3,14 @@
 @using HttpClients.ClientInterfaces
 @using UIComponents
 @using Domain.DTOs
+@using System.Security.Claims
 @inject IPostService postService
 @inject NavigationManager navMgr
 
 <h3>Todos</h3>
 <div class="filter-bar">
     <div class="filters-container">
-        <img src="icons/@(doShowFilters ? "clear_" : "")funnel.png" class="funnel" @onclick="@(() => doShowFilters = !doShowFilters)" alt="Funnel"/>
+        <img src="icons/@(doShowFilters ? "clear_" : "")funnel.png" class="funnel" style="width: 30px; height: 30px" @onclick="@(() => doShowFilters = !doShowFilters)" alt="Funnel"/>
         @if (doShowFilters)
         {
             <div class="filter">
@@ -48,30 +49,38 @@ else
     <table class="table">
         <thead>
         <tr>
-            <th>Posts ID</th>
-            <th>Owner ID</th>
+            <th>Owner Name</th>
             <th>Title</th>
-            <th>Description</th>
-            <th>Edit</th>
-            <th>Delete?</th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         @foreach (var item in posts)
         {
             <tr>
-                <td>@item.Id</td>
                 <td>@item.Owner.UserName</td>
                 <td>@item.Title</td>
-                <td>@item.Description</td>
-                <td>
-                    <img src="icons/edit.gif" class="funnel" @onclick="@(() => navMgr.NavigateTo($"/EditPost/{item.Id}"))"/>
-                </td>
-                <td>
-                    <label @onclick="@(() => RemovePost(item.Id))" style="cursor:pointer; color: red; font-weight: bold">
-                        &#x2717;
-                    </label>
-                </td>
+                @if (isLoggedIn)
+                {
+                    if (name.Equals(item.Owner.UserName))
+                    {
+                        <td>
+                            <img src="icons/edit.gif" class="funnel" style="width: 30px; height: 30px" onclick="@(() => navMgr.NavigateTo($"/EditPost/{item.Id}"))"/>
+                        </td>
+
+                        <td>
+                            <label @onclick="@(() => RemovePost(item.Id))" style="cursor:pointer; color: red; font-weight: bold">
+                                &#x2717;
+                            </label>
+                        </td>
+                    }
+                }
+                else
+                {
+                    <td></td>
+                    <td></td>
+                }
             </tr>
         }
         </tbody>
@@ -83,20 +92,40 @@ else
 }
 
 @code {
+    
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+    
     private IEnumerable<Post>? posts;
     private string msg = "";
     private bool doShowFilters = false;
 
+    private int? postIdFilter;
     private string? usernameFilter;
     private int? userIdFilter;
     private string? descriptionFilter;
     private string? titleContainsFilter;
+    private bool isLoggedIn;
+    private string? name;
+    private IEnumerable<Claim>? userClaims;
 
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthState;
+        ClaimsPrincipal user = authState.User;
+        isLoggedIn = user.Identity != null;
+        
+        if (!isLoggedIn) return;
+        
+        userClaims = user.Claims;
+        name = user.Identity!.Name!;
+    }
+    
     private async Task LoadPosts()
     {
         try
         {
-            posts = await postService.GetAsync(usernameFilter, userIdFilter, titleContainsFilter, descriptionFilter);
+            posts = await postService.GetAsync(postIdFilter,usernameFilter, userIdFilter, titleContainsFilter, descriptionFilter);
         }
         catch (Exception e)
         {

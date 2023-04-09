@@ -16,34 +16,11 @@ public class UsersController : ControllerBase
     {
         this.userLogic = userLogic;
     }
-
-    [HttpPost]
-    public async Task<ActionResult<User>> CreateAsync(UserLoginDto dto)
-    {
-        try
-        {
-            User user = await userLogic.CreateAsync(dto);
-            return Created($"/users/{user.Id}", user);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return StatusCode(500, e.Message);
-        }
-    }
+    
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetAsync(UserLoginDto userLoginDto)
+    public async Task<List<User>> GetAsync()
     {
-        try
-        {
-            User users = await userLogic.GetAsync(userLoginDto);
-            return Ok(users);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return StatusCode(500, e.Message);
-        }
+        return await userLogic.GetAllAsync();
     }
 }

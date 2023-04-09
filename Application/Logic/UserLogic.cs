@@ -38,6 +38,11 @@ public class UserLogic : IUserLogic
         return userDao.GetAsync(user);
     }
 
+    public Task<List<User>> GetAllAsync()
+    {
+        return userDao.GetAllAsync();
+    }
+
     private static void ValidateData(UserLoginDto userToCreate)
     {
         string userName = userToCreate.UserName;

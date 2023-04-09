@@ -50,24 +50,20 @@ public class AuthController : ControllerBase
     private string GenerateJwt(User user)
     {
         List<Claim> claims = GenerateClaims(user);
-        Console.WriteLine("1");
+
         SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
-        Console.WriteLine("2");
         SigningCredentials signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
-        Console.WriteLine("3");
         JwtHeader header = new JwtHeader(signIn);
-        Console.WriteLine("4");
+
         JwtPayload payload = new JwtPayload(
             config["Jwt:Issuer"],
             config["Jwt:Audience"],
             claims, 
             null,
             DateTime.UtcNow.AddMinutes(60));
-        Console.WriteLine("5");
+
         JwtSecurityToken token = new JwtSecurityToken(header, payload);
-        Console.WriteLine("6");
         string serializedToken = new JwtSecurityTokenHandler().WriteToken(token);
-        Console.WriteLine("7");
         return serializedToken;
     }
 
@@ -79,6 +75,7 @@ public class AuthController : ControllerBase
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
             new Claim(ClaimTypes.Name, user.UserName),
+            new Claim("id", user.Id.ToString()),
         };
    
         return claims.ToList();

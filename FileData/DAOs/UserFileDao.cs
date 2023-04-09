@@ -57,4 +57,9 @@ public class UserFileDao : IUserDao
         );
         return Task.FromResult(existing);
     }
+
+    public async Task<List<User>> GetAllAsync()
+    {
+        return context.Users.ToList();
+    }
 }

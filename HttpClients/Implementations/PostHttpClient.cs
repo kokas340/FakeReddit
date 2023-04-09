@@ -26,9 +26,9 @@ public class PostHttpClient : IPostService
         }
     }
 
-    public async Task<ICollection<Post>> GetAsync(string? userName, int? userId, string? titleContains, string? description)
+    public async Task<ICollection<Post>> GetAsync(int? postId, string? userName, int? userId, string? titleContains, string? description)
     {
-        string query = ConstructQuery(userName, userId, titleContains, description);
+        string query = ConstructQuery(postId, userName, userId, titleContains, description);
 
         HttpResponseMessage response = await client.GetAsync("/posts" + query);
         string content = await response.Content.ReadAsStringAsync();
@@ -83,9 +83,16 @@ public class PostHttpClient : IPostService
         }
     }
 
-    private static string ConstructQuery(string? userName, int? userId, string? titleContains, string? description)
+    private static string ConstructQuery(int? postId, string? userName, int? userId, string? titleContains, string? description)
     {
         string query = "";
+        
+        if (postId != null)
+        {
+            query += string.IsNullOrEmpty(query) ? "?" : "&";
+            query += $"postId={postId}";
+        }
+        
         if (!string.IsNullOrEmpty(userName))
         {
             query += $"?username={userName}";
