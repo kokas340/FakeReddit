@@ -5,12 +5,12 @@ using Domain.Models;
 
 namespace Application.Logic;
 
-public class TodoLogic : IPostLogic
+public class PostLogic : IPostLogic
 {
     private readonly IPostDao postDao;
     private readonly IUserDao userDao;
 
-    public TodoLogic(IPostDao postDao, IUserDao userDao)
+    public PostLogic(IPostDao postDao, IUserDao userDao)
     {
         this.postDao = postDao;
         this.userDao = userDao;

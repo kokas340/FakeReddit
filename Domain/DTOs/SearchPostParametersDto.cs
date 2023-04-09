@@ -7,7 +7,7 @@ public class SearchPostParametersDto
     public string? DescriptionContains { get;}
     public string? TitleContains { get;}
 
-    public SearchPostParametersDto(string? username, int? userId, string? descriptionContains, string? titleContains)
+    public SearchPostParametersDto(string? username, int? userId, string? titleContains, string? descriptionContains)
     {
         Username = username;
         UserId = userId;
