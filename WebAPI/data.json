@@ -1,0 +1,36 @@
+{
+  "Users": [
+    {
+      "Id": 1,
+      "UserName": "Hello121",
+      "Password": "Hello121"
+    },
+    {
+      "Id": 2,
+      "UserName": "FuLLeNN",
+      "Password": "FuLLeNN"
+    }
+  ],
+  "Posts": [
+    {
+      "Id": 1,
+      "Owner": {
+        "Id": 2,
+        "UserName": "FuLLeNN",
+        "Password": "FuLLeNN"
+      },
+      "Title": "First Reddit Post",
+      "Description": "My first Reddit Post"
+    },
+    {
+      "Id": 2,
+      "Owner": {
+        "Id": 1,
+        "UserName": "Hello121",
+        "Password": "Hello121"
+      },
+      "Title": "First Post in Fakeit",
+      "Description": "My Fakeit post"
+    }
+  ]
+}
