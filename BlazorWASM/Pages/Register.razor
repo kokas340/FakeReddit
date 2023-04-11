@@ -46,13 +46,12 @@
         errorLabel = "";
         try
         {
-            User u = new User
-            {
-                UserName = userName,
-                Password = password
-            };
-            
-            await authService.RegisterAsync(u);
+            await authService.RegisterAsync(
+                    new User{
+                        UserName = userName,
+                        Password = password
+                    }
+                );
             navMgr.NavigateTo("/Login");
         }
         catch (Exception e)

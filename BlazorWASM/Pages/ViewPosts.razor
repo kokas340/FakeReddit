@@ -79,7 +79,7 @@ else
                 else
                 {
                     <td></td>
-                    <td></td>
+                    <td> <button @onclick="@(() =>OpenPost(item.Id))" class="acceptbtn">VIEW</button></td>
                 }
             </tr>
         }
@@ -97,6 +97,7 @@ else
     public Task<AuthenticationState> AuthState { get; set; } = null!;
     
     private IEnumerable<Post>? posts;
+    private  PostBasicDto post;
     private string msg = "";
     private bool doShowFilters = false;
 
@@ -145,6 +146,21 @@ else
             var list = new List<Post>(posts!);
             list.RemoveAll(post => post.Id == postId);
             posts = list.AsEnumerable();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+    private async Task OpenPost(int postId)
+    {
+    
+        try
+        {
+            post =  await postService.GetByIdAsync(postId);
+            
+           
         }
         catch (Exception e)
         {
