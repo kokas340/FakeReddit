@@ -1,0 +1,78 @@
+﻿@page "/ViewPost/{id:int}"
+@using Domain.Models
+@using HttpClients.ClientInterfaces
+@using UIComponents
+@using Domain.DTOs
+@using System.Security.Claims
+@inject IPostService postService
+@inject NavigationManager navMgr
+
+
+<h3>Post</h3>
+<table class="table">
+        <thead>
+        <tr>
+            <th>Owner Name</th>
+            <th>Title</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+      
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Title</td>
+                <td>@item.Title</td>
+                <td>@item.Title</td>
+                
+            </tr>
+        
+        </tbody>
+    </table>
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+    
+    private IEnumerable<Post>? posts;
+    private  PostBasicDto item;
+    private string msg = "";
+    private bool doShowFilters = false;
+
+    private int? postIdFilter;
+    private string? usernameFilter;
+    private int? userIdFilter;
+    private string? descriptionFilter;
+    private string? titleContainsFilter;
+    private bool isLoggedIn;
+    private string? name;
+    private IEnumerable<Claim>? userClaims;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthState;
+        ClaimsPrincipal user = authState.User;
+        isLoggedIn = user.Identity != null;
+        
+        if (!isLoggedIn) return;
+        
+        userClaims = user.Claims;
+        name = user.Identity!.Name!;
+        try
+        {
+            item = await postService.GetByIdAsync(Id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+    
+   
+}
