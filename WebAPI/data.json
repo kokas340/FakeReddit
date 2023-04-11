@@ -24,6 +24,11 @@
       "Id": 5,
       "UserName": "test44",
       "Password": "test44"
+    },
+    {
+      "Id": 6,
+      "UserName": "jackk",
+      "Password": "jack"
     }
   ],
   "Posts": [
@@ -46,6 +51,16 @@
       },
       "Title": "First Post in Fakeit",
       "Description": "My Fakeit post"
+    },
+    {
+      "Id": 3,
+      "Owner": {
+        "Id": 6,
+        "UserName": "jackk",
+        "Password": "jack"
+      },
+      "Title": "jack",
+      "Description": "test123"
     }
   ]
 }
