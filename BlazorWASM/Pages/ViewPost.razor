@@ -39,20 +39,9 @@
     public int Id { get; set; }
     [CascadingParameter]
     public Task<AuthenticationState> AuthState { get; set; } = null!;
-    
-    private IEnumerable<Post>? posts;
     private  PostBasicDto item;
     private string msg = "";
-    private bool doShowFilters = false;
-
-    private int? postIdFilter;
-    private string? usernameFilter;
-    private int? userIdFilter;
-    private string? descriptionFilter;
-    private string? titleContainsFilter;
     private bool isLoggedIn;
-    private string? name;
-    private IEnumerable<Claim>? userClaims;
 
     protected override async Task OnInitializedAsync()
     {
@@ -61,9 +50,7 @@
         isLoggedIn = user.Identity != null;
         
         if (!isLoggedIn) return;
-        
-        userClaims = user.Claims;
-        name = user.Identity!.Name!;
+ 
         try
         {
             item = await postService.GetByIdAsync(Id);
