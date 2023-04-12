@@ -2,7 +2,7 @@
 
 ## Description
 - Very simple clone of Reddit where *_non-authenticated users_* can only see the list of posts and their titles.
-- *_Authenticated users_* can create a post, view all users, view the entire post ( title and description) and edit their *own* posts.
+- *_Authenticated users_* can create a post, view all users, view the entire post ( title and description) and edit their _own_ posts.
 - The authentication is made using JWT.
 - The storage is a JSON file.
 
