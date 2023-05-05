@@ -15,7 +15,7 @@ namespace EfcDataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source = Reddit.db");
+            optionsBuilder.UseSqlite("Data Source = ../EfcDataAccess/Reddit.db");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

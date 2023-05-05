@@ -2,6 +2,7 @@ using System.Text;
 using Application.DaoInterfaces;
 using Application.Logic;
 using Application.LogicInterfaces;
+using EfcDataAccess;
 using EfcDataAccess.DAOs;
 using FileData;
 using FileData.DAOs;
@@ -23,7 +24,7 @@ builder.Services.AddScoped<IUserLogic, UserLogic>();
 
 builder.Services.AddScoped<IPostDao, PostEfcDao>();
 builder.Services.AddScoped<IPostLogic, PostLogic>();
-
+builder.Services.AddDbContext<RedditContext>();
 
 // added auth handling
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

@@ -2,10 +2,11 @@
 using Domain.DTOs;
 using Domain.Models;
 using Shared.Dtos;
+using System.Collections.Generic;
 
 namespace FileData.DAOs;
 
-public class UserFileDao : IUserDao
+public class UserFileDao 
 {
     private readonly FileContext context;
 
@@ -39,7 +40,7 @@ public class UserFileDao : IUserDao
         return Task.FromResult(existing);
     }
 
-    public Task<User?> GetAsync(UserLoginDto loginUser)
+    public Task<IEnumerable<User?>> GetAsync(UserLoginDto loginUser)
     {
         User user = null;
         if (loginUser.UserName != null && loginUser.Password != null)
@@ -47,7 +48,7 @@ public class UserFileDao : IUserDao
              user  = context.Users.FirstOrDefault(u => 
                 u.UserName.Contains(loginUser.UserName, StringComparison.OrdinalIgnoreCase) && u.Password.Contains(loginUser.Password, StringComparison.Ordinal));
         }
-        return Task.FromResult(user);
+        return null;
     }
 
     public Task<User?> GetByIdAsync(int id)
@@ -61,5 +62,10 @@ public class UserFileDao : IUserDao
     public async Task<List<User>> GetAllAsync()
     {
         return context.Users.ToList();
+    }
+
+    Task<IEnumerable<User?>> GetAsync(SearchUserParametersDto searchParameters)
+    {
+        throw new NotImplementedException();
     }
 }

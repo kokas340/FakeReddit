@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            User user = await userLogic.GetAsync(userLoginDto);
+            User user = (User)await userLogic.GetAsync(userLoginDto);
             Console.WriteLine("0");
             string token = GenerateJwt(user);
             

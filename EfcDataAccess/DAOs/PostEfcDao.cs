@@ -1,6 +1,8 @@
 ﻿using Application.DaoInterfaces;
 using Domain.DTOs;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +13,17 @@ namespace EfcDataAccess.DAOs
 {
     public class PostEfcDao : IPostDao
     {
-        public Task<Post> CreateAsync(Post todo)
+        private readonly RedditContext context;
+
+        public PostEfcDao(RedditContext context)
         {
-            throw new NotImplementedException();
+            this.context = context;
+        }
+        public async Task<Post> CreateAsync(Post post)
+        {
+            EntityEntry<Post> added = await context.Posts.AddAsync(post);
+            await context.SaveChangesAsync();
+            return added.Entity;
         }
 
         public Task DeleteAsync(int id)
@@ -21,14 +31,23 @@ namespace EfcDataAccess.DAOs
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Post>> GetAsync(SearchPostParametersDto searchParameters)
+        public async Task<IEnumerable<Post>> GetAsync(SearchPostParametersDto searchParameters)
         {
-            throw new NotImplementedException();
+            IQueryable<Post> usersQuery = context.Posts.AsQueryable();
+            if (searchParameters.TitleContains != null)
+            {
+                usersQuery = usersQuery.Where(u => u.Title.ToLower().Contains(searchParameters.TitleContains.ToLower()));
+            }
+
+            IEnumerable<Post> result = await usersQuery.ToListAsync();
+            return result;
+
         }
 
-        public Task<Post?> GetByIdAsync(int todoId)
+        public async Task<Post?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            Post? post = await context.Posts.FindAsync(id);
+            return post;
         }
 
         public Task UpdateAsync(Post todo)
