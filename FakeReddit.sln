@@ -1,16 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{A982E6A2-D11C-4554-8DF4-58BDCA620BAF}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{A982E6A2-D11C-4554-8DF4-58BDCA620BAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{979BF4CC-31F6-4071-B658-2DEED805F5B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{979BF4CC-31F6-4071-B658-2DEED805F5B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{C6D51171-4743-4D3E-9E8F-44117E3AF6FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{C6D51171-4743-4D3E-9E8F-44117E3AF6FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileData", "FileData\FileData.csproj", "{C93645DE-82E7-438B-9E4C-77E13BCE0196}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileData", "FileData\FileData.csproj", "{C93645DE-82E7-438B-9E4C-77E13BCE0196}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWASM", "BlazorWASM\BlazorWASM.csproj", "{7925467C-FC00-422A-811F-BB825A91999C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWASM", "BlazorWASM\BlazorWASM.csproj", "{7925467C-FC00-422A-811F-BB825A91999C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClients", "HttpClients\HttpClients.csproj", "{A34829F0-1428-4DDA-9791-4537C1074ED6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClients", "HttpClients\HttpClients.csproj", "{A34829F0-1428-4DDA-9791-4537C1074ED6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfcDataAccess", "EfcDataAccess\EfcDataAccess.csproj", "{BB33CAD9-AB53-4FB2-A146-8574F84499D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +47,12 @@ Global
 		{A34829F0-1428-4DDA-9791-4537C1074ED6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A34829F0-1428-4DDA-9791-4537C1074ED6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A34829F0-1428-4DDA-9791-4537C1074ED6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB33CAD9-AB53-4FB2-A146-8574F84499D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB33CAD9-AB53-4FB2-A146-8574F84499D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB33CAD9-AB53-4FB2-A146-8574F84499D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB33CAD9-AB53-4FB2-A146-8574F84499D0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

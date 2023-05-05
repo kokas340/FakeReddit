@@ -14,4 +14,5 @@ public class Post
         Title = title;
         Description = description;
     }
+    private Post() { }
 }
